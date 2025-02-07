@@ -69,3 +69,5 @@ async def help_command(ctx):
         "`+meme` - Envía un meme ecológico al azar.\n"
     )
     await ctx.send(help_text)
+
+bot.run("TU TOKEN VA AQUÍ")

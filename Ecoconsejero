@@ -1,0 +1,71 @@
+import discord
+import random, os, requests
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix="+", intents=intents, help_command=None)
+
+@bot.event
+async def on_ready():
+    print(f'Hemos iniciado sesión como {bot.user}')
+
+# Datos de descomposición de objetos
+decomposition_times = {
+    "botella de plástico": "500 años",
+    "papel": "2 a 6 semanas",
+    "lata de aluminio": "200 años",
+    "colilla de cigarro": "10 años",
+    "vidrio": "4,000 años o más"
+}
+
+@bot.command(name="descomposicion")
+async def descomposicion(ctx, *, objeto: str):
+    tiempo = decomposition_times.get(objeto.lower(), "No tengo información sobre ese objeto.")
+    await ctx.send(f"♻️ El objeto **{objeto}** tarda aproximadamente **{tiempo}** en descomponerse.")
+
+# Alternativas ecológicas
+eco_alternatives = {
+    "bolsas de plástico": "Bolsas reutilizables de tela o papel reciclado.",
+    "botella de plástico": "Botellas reutilizables de acero inoxidable o vidrio.",
+    "pajillas de plástico": "Pajillas de bambú o acero inoxidable.",
+    "envolturas de plástico": "Envolturas de cera de abeja reutilizables.",
+    "pañales desechables": "Pañales de tela reutilizables."
+}
+
+@bot.command(name="alternativa")
+async def alternativa(ctx, *, producto: str):
+    alternativa = eco_alternatives.get(producto.lower(), "No tengo una alternativa registrada para ese producto.")
+    await ctx.send(f"🌱 En lugar de **{producto}**, puedes usar: **{alternativa}**")
+
+# Pasos para reparar objetos
+repair_steps = {
+    "zapatillas rotas": "1️⃣ Limpia la zona dañada.\n2️⃣ Usa pegamento fuerte o costura resistente.\n3️⃣ Déjalo secar antes de usar nuevamente.",
+    "celular con pantalla rota": "1️⃣ Evalúa si el daño es superficial o grave.\n2️⃣ Compra un kit de reparación o llévalo a un técnico.\n3️⃣ Protege la nueva pantalla con un protector de vidrio templado.",
+    "mueble de madera rayado": "1️⃣ Lija suavemente la superficie.\n2️⃣ Aplica cera o barniz según el acabado original.\n3️⃣ Pule hasta que la superficie quede uniforme."
+}
+
+@bot.command(name="reparar")
+async def reparar(ctx, *, objeto: str):
+    pasos = repair_steps.get(objeto.lower(), "No tengo instrucciones de reparación para ese objeto.")
+    await ctx.send(f"🛠️ Para reparar **{objeto}**, sigue estos pasos:\n{pasos}")
+
+@bot.command(name="meme")
+async def memeecologico(ctx):
+    x= os.listdir("imageecologico")
+    y= random.choice(x)
+    with open(f'imageecologico/{y}', 'rb') as f:
+        picture = discord.File(f)
+    await ctx.send(file=picture)
+
+@bot.command(name="help")
+async def help_command(ctx):
+    help_text = (
+        "**Lista de comandos disponibles:**\n"
+        "`+descomposicion [objeto]` - Muestra el tiempo de descomposición de un objeto.\n"
+        "`+alternativa [producto]` - Sugiere una alternativa ecológica para un producto.\n"
+        "`+reparar [objeto]` - Proporciona pasos para reparar un objeto y evitar desecharlo.\n"
+        "`+meme` - Envía un meme ecológico al azar.\n"
+    )
+    await ctx.send(help_text)
